@@ -24,10 +24,7 @@ public:
     ~MainWindow();
 
 public slots:
-    void sendToTextBr(QString str);
-    void changeStateBtn(QString state);
-    void clearText(int num);
-    void Time(int num);
+    void Time(QString m, QString s, QString ms);
 
 private slots:
     void on_btnStartStop_clicked();

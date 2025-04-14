@@ -11,15 +11,13 @@ class Stopwatch: public QObject
 public:
     explicit Stopwatch(QObject *parent=nullptr);
     ~Stopwatch();
+
     void ChangeStateButton(QString state);
-    void setText();
+    QString setText();
     void clearText();
 
 signals:
-    void sig_ChangeStateButton(QString state);
-    void sig_setText(QString state);
-    void sig_clearText(int num);
-    void sig_Time(int t);
+    void sig_Time(QString m, QString s, QString ms);
 
 private slots:
     void TimerSlot();

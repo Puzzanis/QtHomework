@@ -10,8 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     this->setWindowTitle("Stopwatch");
-    ui->label->setText(QString::number(0));
-    ui->label->setFont(QFont("Times", 45, QFont::Bold));
+    ui->label->setText(QString(".000"));
+    ui->label_2->setText(QString("00"));
+    ui->label_3->setText(QString("00:"));
+    ui->label->setFont(QFont("Times", 40, QFont::Bold));
+    ui->label_2->setFont(QFont("Times", 40, QFont::Bold));
+    ui->label_3->setFont(QFont("Times", 40, QFont::Bold));
     ui->btnStartStop->setText("Старт");
     ui->btnClear->setText("Очистить");
     ui->btnCircle->setText("Круг");
@@ -19,9 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     stopwtch = new Stopwatch(this);
-    QObject::connect(stopwtch, &Stopwatch::sig_ChangeStateButton, this, &MainWindow::changeStateBtn);
-    QObject::connect(stopwtch, &Stopwatch::sig_setText, this, &MainWindow::sendToTextBr);
-    QObject::connect(stopwtch, &Stopwatch::sig_clearText, this, &MainWindow::clearText);
     QObject::connect(stopwtch, &Stopwatch::sig_Time, this, &MainWindow::Time);
 }
 
@@ -30,43 +31,40 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::sendToTextBr(QString str)
+void MainWindow::Time(QString m, QString s, QString ms)
 {
-    ui->textBrowser->append(str);
+    ui->label->setText(ms);
+    ui->label_2->setText(s);
+    ui->label_3->setText(m);
 }
 
-void MainWindow::changeStateBtn(QString state)
-{
-    ui->btnCircle->setEnabled((state=="Стоп")?true:false);
-    ui->btnStartStop->setText(state);
-}
-
-void MainWindow::clearText(int num)
-{
-    ui->textBrowser->clear();
-    ui->label->setText(QString::number(num));
-}
-
-void MainWindow::Time(int num)
-{
-    ui->label->setText(QString::number(num));
-}
-
-void MainWindow::on_btnStartStop_clicked()
-{
-    QString state = ui->btnStartStop->text();
-    stopwtch->ChangeStateButton(state);
-}
 
 
 void MainWindow::on_btnCircle_clicked()
 {
-    stopwtch->setText();
+    QString str = stopwtch->setText();
+    ui->textBrowser->append(str);
 }
 
 
 void MainWindow::on_btnClear_clicked()
 {
+    ui->textBrowser->clear();
     stopwtch->clearText();
+    ui->label_3->setText(QString("00:"));
+    ui->label_2->setText(QString("00"));
+    ui->label->setText(QString(".000"));
+}
+
+
+void MainWindow::on_btnStartStop_clicked()
+{
+    QString state;
+    state = ui->btnStartStop->text();
+    ui->btnStartStop->setText((state == "Старт")?"Стоп":"Старт");
+
+    state = ui->btnStartStop->text();
+    ui->btnCircle->setEnabled((state=="Стоп")?true:false);
+    stopwtch->ChangeStateButton(state);
 }
 
