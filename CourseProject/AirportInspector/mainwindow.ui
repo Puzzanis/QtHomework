@@ -106,10 +106,19 @@
     <property name="title">
      <string>Инструменты</string>
     </property>
+    <addaction name="action"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
+   <property name="text">
+    <string>Параметры подключения к БД</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
