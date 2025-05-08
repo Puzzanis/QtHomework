@@ -6,12 +6,17 @@ SettingsBD::SettingsBD(QWidget *parent)
     , ui(new Ui::SettingsBD)
 {
     ui->setupUi(this);
+    dataForDB = new DataToConnectToDB();
 
-    ui->host->setPlaceholderText(QString("981757-ca08998.tmweb.ru"));
-    ui->port->setPlaceholderText(QString("5432"));
-    ui->nameBD->setPlaceholderText(QString("demo"));
-    ui->user->setPlaceholderText(QString("netology_usr_cpp"));
-    ui->password->setPlaceholderText(QString("CppNeto3"));
+    ui->host    ->setText(QString(dataForDB->hostName));
+    ui->port    ->setText(QString(dataForDB->port));
+    ui->dbName  ->setText(QString(dataForDB->dbName));
+    ui->user    ->setText(QString(dataForDB->login));
+    ui->pass    ->setText(QString(dataForDB->pass));
+    //Ресайзим вектор значений, по количеству полей необходимых для
+    //подключения к БД
+    dbData.resize(NUM_DATA_FOR_CONNECT_TO_DB);
+    on_buttonBox_accepted();
 }
 
 SettingsBD::~SettingsBD()
@@ -21,10 +26,16 @@ SettingsBD::~SettingsBD()
 
 void SettingsBD::on_buttonBox_accepted()
 {
-    if (ui->buttonBox->button(QDialogButtonBox::Ok))
-    {
-        qDebug() << "sjhfkjsh";
-    }
+    //Добавляем данные в контейнер и передаем в главное окно
+    dbData[hostName] = ui->host->text();
+    dbData[dbName]   = ui->dbName->text();
+    dbData[login]    = ui->user->text();
+    dbData[pass]     = ui->pass->text();
+    dbData[port]     = ui->port->text();
+
+    emit sig_sendData(dbData);
 }
+
+
 
 

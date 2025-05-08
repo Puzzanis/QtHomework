@@ -1495,6 +1495,6 @@ E:/C++/QtHomework/QtHomework_8/mainwindow.h
 E:/C++/QtHomework/QtHomework_8/database.cpp
 E:/C++/QtHomework/QtHomework_8/dbdata.cpp
  uic:ui_dbdata.h
+E:/C++/QtHomework/QtHomework_8/main.cpp
 E:/C++/QtHomework/QtHomework_8/mainwindow.cpp
  uic:./ui_mainwindow.h
-E:/C++/QtHomework/QtHomework_8/main.cpp

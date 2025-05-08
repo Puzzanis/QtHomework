@@ -28,6 +28,7 @@ set(PROJECT_SOURCES
 
 add_executable(08_PreDataBase
 	${PROJECT_SOURCES}
+        mainwindow123.ui
 )
 
 

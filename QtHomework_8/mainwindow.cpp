@@ -166,3 +166,4 @@ void MainWindow::on_pb_clear_clicked()
     ui->tb_result->setModel(NULL);
 }
 
+

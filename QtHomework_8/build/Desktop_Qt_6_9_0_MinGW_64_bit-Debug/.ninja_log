@@ -1,11 +1,11 @@
 # ninja log v6
-7	1029	7672019288855334	08_PreDataBase_autogen/timestamp	b4a3e6e3617bf557
-7	1029	7672019288855334	08_PreDataBase_autogen/mocs_compilation.cpp	b4a3e6e3617bf557
-7	1029	7672019288855334	E:/C++/QtHomework/QtHomework_8/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/08_PreDataBase_autogen/timestamp	b4a3e6e3617bf557
-7	1029	7672019288855334	E:/C++/QtHomework/QtHomework_8/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/08_PreDataBase_autogen/mocs_compilation.cpp	b4a3e6e3617bf557
+15	158	7681495590336923	08_PreDataBase_autogen/timestamp	b4a3e6e3617bf557
 1045	2758	7672019289515098	CMakeFiles/08_PreDataBase.dir/database.cpp.obj	b0c9dfd4e6db2c7f
-1048	3118	7672019289545098	CMakeFiles/08_PreDataBase.dir/dbdata.cpp.obj	44ab23a1039853e4
+15	158	7681495590336923	08_PreDataBase_autogen/mocs_compilation.cpp	b4a3e6e3617bf557
 1039	4235	7672019289455106	CMakeFiles/08_PreDataBase.dir/main.cpp.obj	b9be3c38f5b21928
+15	158	7681495590336923	E:/C++/QtHomework/QtHomework_8/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/08_PreDataBase_autogen/timestamp	b4a3e6e3617bf557
+15	158	7681495590336923	E:/C++/QtHomework/QtHomework_8/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/08_PreDataBase_autogen/mocs_compilation.cpp	b4a3e6e3617bf557
+161	2123	7681495591790702	CMakeFiles/08_PreDataBase.dir/dbdata.cpp.obj	44ab23a1039853e4
 1036	4489	7672019289425428	CMakeFiles/08_PreDataBase.dir/08_PreDataBase_autogen/mocs_compilation.cpp.obj	b12cc86b8d931ba2
-1042	4541	7672019289485088	CMakeFiles/08_PreDataBase.dir/mainwindow.cpp.obj	f248345d6530cc0b
-4541	4906	7672019324475509	08_PreDataBase.exe	94ba3735146bc990
+158	3450	7681495591760570	CMakeFiles/08_PreDataBase.dir/mainwindow.cpp.obj	f248345d6530cc0b
+3450	3812	7681495624683700	08_PreDataBase.exe	94ba3735146bc990
