@@ -9,6 +9,8 @@ DataBase::DataBase(QObject *parent)
     modelQuery= new QSqlQueryModel(this);
     modelQueryAirports = new QSqlQueryModel(this);
     modelQueryFlights = new QSqlQueryModel(this);
+    modelQueryYear = new QSqlQueryModel(this);
+    modelQueryMonths = new QSqlQueryModel(this);
 }
 
 DataBase::~DataBase()
@@ -33,7 +35,8 @@ void DataBase::AddDataBase(QString driver, QString nameDB)
  */
 void DataBase::ConnectToDataBase(QVector<QString> data)
 {
-    bool isConnect = dataBase->isOpen();
+    isConnect = dataBase->isOpen();
+    qDebug() << __FUNCTION__ << " --> " << isConnect;
     if (!isConnect)
     {
         dataBase->setHostName(data[hostName]);
@@ -53,7 +56,14 @@ void DataBase::DisconnectFromDataBase(QString nameDb)
 {
 
     *dataBase = QSqlDatabase::database(nameDb);
-    dataBase->close();
+
+    isConnect = dataBase->isOpen();
+    if (isConnect)
+    {
+        dataBase->close();
+        emit sig_SendStatusConnection(isConnect);
+    }
+
 
 }
 
@@ -103,13 +113,41 @@ QSqlQueryModel *DataBase::GetArrivalDeparture(QString request)
     return modelQueryFlights;
 }
 
+QSqlQueryModel *DataBase::GetYearStatistics(QString request)
+{
+    modelQueryYear->setQuery(QSqlQuery(request, *dataBase));
+    if ( modelQueryYear->lastError().isValid()) {
+        qDebug() << "Ошибка в запросе: " << modelQueryYear->lastError().text();
+    }
+    else
+    {
+        qDebug() << "Запрос выполнен успешно";
+
+    }
+    return modelQueryYear;
+}
+
+QSqlQueryModel *DataBase::GetMonthsStatistics(QString request)
+{
+    modelQueryMonths->setQuery(QSqlQuery(request, *dataBase));
+    if (modelQueryMonths->lastError().isValid())
+    {
+        qDebug() << "Ошибка в запросе: " << modelQueryMonths->lastError().text();
+    }
+    else
+    {
+        qDebug() << "Запрос выполнен успешно"  << Qt::endl;
+    }
+
+    return modelQueryMonths;
+}
+
 
 /*!
  * @brief Метод возвращает последнюю ошибку БД
  */
-QSqlError DataBase::GetLastError()
+QSqlError DataBase::getLastError()
 {
-    QString s = dataBase->lastError().text();
     return dataBase->lastError();
 }
 

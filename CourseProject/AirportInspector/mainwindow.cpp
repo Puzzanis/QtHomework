@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent)
     dataBase = new DataBase(this);
     lConnect = new QLabel(this);
     timer = new QTimer(this);
+    msg  = new QMessageBox(this);
+    dataForDB = new DataToConnectToDB();
+    workloadDialog = new Workload(nullptr);
 
 
     lConnect -> setText(QString("Отсутствует соединение с БД!"));
@@ -20,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setAlternatingRowColors(true);
+    ui->cb_Aeroport->setEnabled(false);
 
     //Установим размер вектора данных для подключения к БД
     dataForConnect.resize(NUM_DATA_FOR_CONNECT_TO_DB);
@@ -29,9 +33,12 @@ MainWindow::MainWindow(QWidget *parent)
     */
     dataBase->AddDataBase(POSTGRE_DRIVER, DB_NAME);
 
-    connect(settings, &SettingsBD::sig_sendData, this, &MainWindow::ConnectionToDB);
-    connect(dataBase, &DataBase::sig_SendStatusConnection, this, &MainWindow::ReceiveStatusConnectionToDB);
-    connect(timer, &QTimer::timeout, this, &MainWindow::Refresh_connection);
+    connect(settings, &SettingsBD::sig_sendData, this, &MainWindow::slot_ConnectionToDB);
+    connect(dataBase, &DataBase::sig_SendStatusConnection, this, &MainWindow::slot_ReceiveStatusConnectionToDB);
+    connect(dataBase, &DataBase::sig_SendStatusConnection, workloadDialog, &Workload::slot_status_connection);
+    connect(timer, &QTimer::timeout, this, &MainWindow::slot_refresh_connection);
+
+    settings->autoStart();
 
 }
 
@@ -40,44 +47,60 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::ReceiveStatusConnectionToDB(bool status)
+void MainWindow::slot_ReceiveStatusConnectionToDB(bool status)
 {
-    if(status)
+    connToDB = status;
+    settings->setConnectedStatus(connToDB);
+    if(connToDB)
     {
         lConnect -> setText(QString("Соединение с БД установлено!"));
         lConnect -> setStyleSheet("QLabel { color : blue; }");
         timer->stop();
         firstRequest();
+        ui->cb_Aeroport->setEnabled(true);
     }
     else
     {
         timer->start(5000);
         lConnect -> setText(QString("Отсутствует соединение с БД!"));
         lConnect -> setStyleSheet("QLabel { color : red; }");
+        ui->tableView->setModel(NULL);
+        ui->cb_Aeroport->clear();
+        ui->cb_Aeroport->setEnabled(false);
 
-        dataBase->DisconnectFromDataBase(DB_NAME);
         msg->setIcon(QMessageBox::Critical);
-        msg->setText(dataBase->GetLastError().text());
-        msg->show();
+        msg->setText(dataBase->getLastError().text());
+        msg->exec();
     }
 
     ui->statusbar->addPermanentWidget(lConnect,1);
 }
 
-void MainWindow::ConnectionToDB(QVector<QString> receivData)
+void MainWindow::slot_ConnectionToDB(QVector<QString> receivData)
 {
     dataForConnect = receivData;
-    dataBase->ConnectToDataBase(dataForConnect);
+    if (!connToDB)
+    {
+
+        dataBase->ConnectToDataBase(dataForConnect);
+    }
+    else
+    {
+        dataBase->DisconnectFromDataBase(dataForDB->dbName);
+    }
 }
 
-void MainWindow::Refresh_connection()
+void MainWindow::slot_refresh_connection()
 {
+    qDebug() << "проверка соединения с БД";
     msg->close();
+    settings->autoStart();
 }
 
 void MainWindow::on_action_triggered()
 {
-    settings->show();
+    settings->changingButton();
+    settings->exec();
 }
 
 void MainWindow::firstRequest()
@@ -111,7 +134,28 @@ void MainWindow::on_pb_flights_clicked()
                            "AND DATE(scheduled_departure AT TIME ZONE ad.timezone) = to_date('" + dateTimeStr + "', 'DD/MM/YY')";
     }
     //запрос в БД
-    qDebug() << request;
     ui->tableView->setModel(dataBase->GetArrivalDeparture(request));
+}
+
+
+void MainWindow::on_pb_workload_clicked()
+{
+    QString NameCity = ui->cb_Aeroport->currentText();
+    QString Code = dataBase->getCode(NameCity);
+    workloadDialog->setNameCityStat(NameCity);
+    request = "SELECT count(flight_no), "
+              "date_trunc('month', scheduled_departure)::date AS Month "
+              "FROM bookings.flights f "
+              "WHERE (scheduled_departure::date >= DATE('2016-08-15') AND scheduled_departure::date < DATE('2017-09-15')) "
+              "AND (departure_airport = '" + Code + "' OR arrival_airport = '" + Code + "') GROUP BY Month";
+    workloadDialog->yearRequest(dataBase->GetYearStatistics(request));
+    workloadDialog->setIndexMonths();
+
+    request = "SELECT count(flight_no),  date_trunc('day', scheduled_departure)::date AS Day "
+              "FROM bookings.flights f "
+              "WHERE (scheduled_departure >= DATE('2016-08-15') AND scheduled_departure::date < DATE('2017-09-15')) "
+              "AND (departure_airport = '" + Code + "' OR arrival_airport = '" + Code + "') GROUP BY Day";
+    workloadDialog->monthsRequest(dataBase->GetMonthsStatistics(request));
+    workloadDialog->exec();
 }
 

@@ -16,18 +16,22 @@ class SettingsBD : public QDialog
 public:
     explicit SettingsBD(QWidget *parent = nullptr);
     ~SettingsBD();
+    void autoStart();
+    void setConnectedStatus(const bool con);
+    void changingButton();
 
 signals:
     void sig_sendData(QVector<QString> dbData);
 
 private slots:
-    void on_buttonBox_accepted();
-
+    void on_pb_connect_clicked();
 
 private:
     QVector<QString> dbData; //Данные для подключения к БД.
     DataToConnectToDB* dataForDB;
     Ui::SettingsBD *ui;
+
+    bool connToDB{false};
 };
 
 #endif // SETTINGSBD_H

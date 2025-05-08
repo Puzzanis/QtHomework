@@ -16,7 +16,7 @@ SettingsBD::SettingsBD(QWidget *parent)
     //Ресайзим вектор значений, по количеству полей необходимых для
     //подключения к БД
     dbData.resize(NUM_DATA_FOR_CONNECT_TO_DB);
-    on_buttonBox_accepted();
+
 }
 
 SettingsBD::~SettingsBD()
@@ -24,9 +24,8 @@ SettingsBD::~SettingsBD()
     delete ui;
 }
 
-void SettingsBD::on_buttonBox_accepted()
+void SettingsBD::autoStart()
 {
-    //Добавляем данные в контейнер и передаем в главное окно
     dbData[hostName] = ui->host->text();
     dbData[dbName]   = ui->dbName->text();
     dbData[login]    = ui->user->text();
@@ -36,6 +35,27 @@ void SettingsBD::on_buttonBox_accepted()
     emit sig_sendData(dbData);
 }
 
+void SettingsBD::setConnectedStatus(const bool con)
+{
+    connToDB = con;
+}
 
+void SettingsBD::changingButton()
+{
+    ui->pb_connect->setText((connToDB)?"Отключиться":"Подключиться");
+}
+
+void SettingsBD::on_pb_connect_clicked()
+{
+
+    dbData[hostName] = ui->host->text();
+    dbData[dbName]   = ui->dbName->text();
+    dbData[login]    = ui->user->text();
+    dbData[pass]     = ui->pass->text();
+    dbData[port]     = ui->port->text();
+
+    emit sig_sendData(dbData);
+    this->close();
+}
 
 
