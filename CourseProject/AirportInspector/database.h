@@ -40,7 +40,6 @@ signals:
 private:
     QMap<QString, QString>  mapCityAndCode;
     QSqlDatabase* dataBase;
-    QSqlTableModel* modelTable;
     QSqlQueryModel* modelQuery;
     QSqlQueryModel * modelQueryAirports = nullptr;
     QSqlQueryModel * modelQueryFlights = nullptr;

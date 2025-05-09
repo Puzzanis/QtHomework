@@ -6,11 +6,14 @@ DataBase::DataBase(QObject *parent)
 {
 
     dataBase = new QSqlDatabase();
+
     modelQuery= new QSqlQueryModel(this);
     modelQueryAirports = new QSqlQueryModel(this);
     modelQueryFlights = new QSqlQueryModel(this);
     modelQueryYear = new QSqlQueryModel(this);
     modelQueryMonths = new QSqlQueryModel(this);
+
+    dataBase->setConnectOptions("connect_timeout=5");
 }
 
 DataBase::~DataBase()
@@ -26,7 +29,7 @@ void DataBase::AddDataBase(QString driver, QString nameDB)
 {
 
     *dataBase = QSqlDatabase::addDatabase(driver, nameDB);
-    modelTable= new QSqlTableModel(this, *dataBase);
+    // modelTable= new QSqlTableModel(this, *dataBase);
 }
 /*!
  * \brief Метод подключается к БД
@@ -36,7 +39,6 @@ void DataBase::AddDataBase(QString driver, QString nameDB)
 void DataBase::ConnectToDataBase(QVector<QString> data)
 {
     isConnect = dataBase->isOpen();
-    qDebug() << __FUNCTION__ << " --> " << isConnect;
     if (!isConnect)
     {
         dataBase->setHostName(data[hostName]);
@@ -54,13 +56,12 @@ void DataBase::ConnectToDataBase(QVector<QString> data)
  */
 void DataBase::DisconnectFromDataBase(QString nameDb)
 {
-
-    *dataBase = QSqlDatabase::database(nameDb);
-
     isConnect = dataBase->isOpen();
     if (isConnect)
     {
+        *dataBase = QSqlDatabase::database(nameDb);
         dataBase->close();
+        isConnect = dataBase->isOpen();
         emit sig_SendStatusConnection(isConnect);
     }
 

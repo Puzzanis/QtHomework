@@ -24,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setAlternatingRowColors(true);
     ui->cb_Aeroport->setEnabled(false);
+    ui->dateTimeEdit->setEnabled(false);
+    ui->pb_flights->setEnabled(false);
+    ui->pb_workload->setEnabled(false);
 
     //Установим размер вектора данных для подключения к БД
     dataForConnect.resize(NUM_DATA_FOR_CONNECT_TO_DB);
@@ -33,10 +36,14 @@ MainWindow::MainWindow(QWidget *parent)
     */
     dataBase->AddDataBase(POSTGRE_DRIVER, DB_NAME);
 
+    timer->setInterval(5000);
+    timer->start();
+
     connect(settings, &SettingsBD::sig_sendData, this, &MainWindow::slot_ConnectionToDB);
     connect(dataBase, &DataBase::sig_SendStatusConnection, this, &MainWindow::slot_ReceiveStatusConnectionToDB);
     connect(dataBase, &DataBase::sig_SendStatusConnection, workloadDialog, &Workload::slot_status_connection);
     connect(timer, &QTimer::timeout, this, &MainWindow::slot_refresh_connection);
+
 
     settings->autoStart();
 
@@ -55,18 +62,22 @@ void MainWindow::slot_ReceiveStatusConnectionToDB(bool status)
     {
         lConnect -> setText(QString("Соединение с БД установлено!"));
         lConnect -> setStyleSheet("QLabel { color : blue; }");
-        timer->stop();
+        //timer->stop();
         firstRequest();
         ui->cb_Aeroport->setEnabled(true);
+        ui->dateTimeEdit->setEnabled(true);
+        ui->pb_flights->setEnabled(true);
+        ui->pb_workload->setEnabled(true);
     }
     else
     {
-        timer->start(5000);
         lConnect -> setText(QString("Отсутствует соединение с БД!"));
         lConnect -> setStyleSheet("QLabel { color : red; }");
         ui->tableView->setModel(NULL);
-        ui->cb_Aeroport->clear();
         ui->cb_Aeroport->setEnabled(false);
+        ui->dateTimeEdit->setEnabled(false);
+        ui->pb_flights->setEnabled(false);
+        ui->pb_workload->setEnabled(false);
 
         msg->setIcon(QMessageBox::Critical);
         msg->setText(dataBase->getLastError().text());
@@ -79,22 +90,26 @@ void MainWindow::slot_ReceiveStatusConnectionToDB(bool status)
 void MainWindow::slot_ConnectionToDB(QVector<QString> receivData)
 {
     dataForConnect = receivData;
+
     if (!connToDB)
     {
-
+        dataBase->AddDataBase(POSTGRE_DRIVER, DB_NAME);
         dataBase->ConnectToDataBase(dataForConnect);
     }
     else
     {
+        timer->stop();
         dataBase->DisconnectFromDataBase(dataForDB->dbName);
     }
 }
 
 void MainWindow::slot_refresh_connection()
 {
-    qDebug() << "проверка соединения с БД";
-    msg->close();
-    settings->autoStart();
+    if (!connToDB)
+    {
+        msg->close();
+        settings->autoStart();
+    }
 }
 
 void MainWindow::on_action_triggered()
