@@ -38,6 +38,8 @@ private slots:
     void slot_ReceiveStatusConnectionToDB(bool status);
     void slot_ConnectionToDB(QVector<QString> receivData);
 
+    void on_action_2_triggered();
+
 private:
     void setupModel(const QString &tableName, const QStringList &headers);
     void firstRequest();

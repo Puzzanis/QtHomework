@@ -174,3 +174,9 @@ void MainWindow::on_pb_workload_clicked()
     workloadDialog->exec();
 }
 
+
+void MainWindow::on_action_2_triggered()
+{
+    this->close();
+}
+
