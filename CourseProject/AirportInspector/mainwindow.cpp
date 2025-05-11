@@ -112,7 +112,7 @@ void MainWindow::slot_refresh_connection()
     }
 }
 
-void MainWindow::on_action_triggered()
+void MainWindow::on_settings_triggered()
 {
     settings->changingButton();
     settings->exec();
@@ -175,8 +175,9 @@ void MainWindow::on_pb_workload_clicked()
 }
 
 
-void MainWindow::on_action_2_triggered()
+void MainWindow::on_exit_triggered()
 {
     this->close();
 }
+
 

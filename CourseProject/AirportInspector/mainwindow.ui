@@ -165,13 +165,13 @@
     <property name="title">
      <string>Инструменты</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
+    <addaction name="settings"/>
+    <addaction name="exit"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action">
+  <action name="settings">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
    </property>
@@ -179,7 +179,7 @@
     <string>Параметры подключения к БД</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="exit">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::SystemLogOut"/>
    </property>

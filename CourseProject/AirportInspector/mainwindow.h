@@ -30,7 +30,6 @@ signals:
 
 
 private slots:
-    void on_action_triggered();
     void on_pb_clear_clicked();
     void on_pb_flights_clicked();
     void on_pb_workload_clicked();
@@ -38,7 +37,9 @@ private slots:
     void slot_ReceiveStatusConnectionToDB(bool status);
     void slot_ConnectionToDB(QVector<QString> receivData);
 
-    void on_action_2_triggered();
+    void on_exit_triggered();
+
+    void on_settings_triggered();
 
 private:
     void setupModel(const QString &tableName, const QStringList &headers);
