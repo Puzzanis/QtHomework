@@ -27,27 +27,29 @@ DataBase::~DataBase()
 */
 void DataBase::AddDataBase(QString driver, QString nameDB)
 {
-
     *dataBase = QSqlDatabase::addDatabase(driver, nameDB);
-    // modelTable= new QSqlTableModel(this, *dataBase);
 }
 /*!
  * \brief Метод подключается к БД
  * \param для удобства передаем контейнер с данными необходимыми для подключения
  * \return возвращает тип ошибки
  */
-void DataBase::ConnectToDataBase(QVector<QString> data)
+void DataBase::ConnectToDataBase(QVector<QString> data, QString driver, QString nameDB)
 {
-    isConnect = dataBase->isOpen();
-    if (!isConnect)
+    if (dataBase->driverName().isEmpty())
     {
-        dataBase->setHostName(data[hostName]);
-        dataBase->setDatabaseName(data[dbName]);
-        dataBase->setUserName(data[login]);
-        dataBase->setPassword(data[pass]);
-        dataBase->setPort(data[port].toInt());
-        emit sig_SendStatusConnection(dataBase->open());
+        AddDataBase("QPSQL", "demo");
     }
+    isConnect = dataBase->isOpen();
+
+    dataBase->setHostName(data[hostName]);
+    dataBase->setDatabaseName(data[dbName]);
+    dataBase->setUserName(data[login]);
+    dataBase->setPassword(data[pass]);
+    dataBase->setPort(data[port].toInt());
+    bool op = dataBase->open();
+    emit sig_SendStatusConnection(op);
+    qDebug() << dataBase->driverName();
 }
 
 /*!
@@ -64,8 +66,6 @@ void DataBase::DisconnectFromDataBase(QString nameDb)
         isConnect = dataBase->isOpen();
         emit sig_SendStatusConnection(isConnect);
     }
-
-
 }
 
 QSqlQueryModel * DataBase::GetAirports(QString request)

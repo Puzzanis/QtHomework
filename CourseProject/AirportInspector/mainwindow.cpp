@@ -93,8 +93,7 @@ void MainWindow::slot_ConnectionToDB(QVector<QString> receivData)
 
     if (!connToDB)
     {
-        dataBase->AddDataBase(POSTGRE_DRIVER, DB_NAME);
-        dataBase->ConnectToDataBase(dataForConnect);
+        dataBase->ConnectToDataBase(dataForConnect, POSTGRE_DRIVER, DB_NAME);
     }
     else
     {

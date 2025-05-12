@@ -22,7 +22,7 @@ public:
     QSqlError getLastError(void);
 
     void AddDataBase(QString driver, QString nameDB = "");
-    void ConnectToDataBase(QVector<QString> dataForConnect);
+    void ConnectToDataBase(QVector<QString> dataForConnect, QString driver, QString nameDB);
     void DisconnectFromDataBase(QString nameDb = "");
     void RequestToDB(QString request);
     QSqlQueryModel * GetAirports(QString request);

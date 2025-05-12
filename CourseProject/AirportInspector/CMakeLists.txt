@@ -49,9 +49,14 @@ else()
         )
     endif()
 endif()
-
+target_link_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/PG_Libs)
 target_link_libraries(AirportInspector PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(AirportInspector PRIVATE Qt6::Sql)
+target_link_libraries(AirportInspector PRIVATE Qt6::Sql
+                                               libcrypto-3-x64
+                                               libiconv-2
+                                               libintl-9
+                                               libpq
+                                               libssl-3-x64)
 target_link_libraries(AirportInspector PRIVATE Qt6::Charts)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
