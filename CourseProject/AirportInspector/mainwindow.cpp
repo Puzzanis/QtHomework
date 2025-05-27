@@ -135,14 +135,14 @@ void MainWindow::on_pb_flights_clicked()
     QString dateTimeStr = ui->dateTimeEdit->text();
     if (ui->rb_arrival->isChecked())
     {
-        request = "SELECT flight_no as \"Номер рейса\", scheduled_arrival as \"Время прилета\", ad.airport_name->>'ru' as \"Аэропорт\" from bookings.flights f "
-                  "JOIN bookings.airports_data ad on ad.airport_code = f.departure_airport "
+        request = "SELECT flight_no as \"Номер рейса\", scheduled_departure as \"Время вылета\", ad.airport_name->>'ru' as \"Аэропорт \nназначения\" from bookings.flights f "
+                  "JOIN bookings.airports_data ad on ad.airport_code = f.arrival_airport "
                   "where f.arrival_airport  = '" + Code + "' "
                            "AND DATE(scheduled_arrival AT TIME ZONE ad.timezone) = to_date('" + dateTimeStr + "', 'DD/MM/YY')";
     }
     else
     {
-        request = "SELECT flight_no as \"Номер рейса\", scheduled_departure as \"Время вылета\", ad.airport_name->>'ru' as \"Аэропорт\" from bookings.flights f "
+        request = "SELECT flight_no as \"Номер рейса\", scheduled_departure as \"Время вылета\", ad.airport_name->>'ru' as \"Аэропорт \nотправления\" from bookings.flights f "
                   "JOIN bookings.airports_data ad on ad.airport_code = f.departure_airport "
                   "where f.departure_airport  = '" + Code + "' "
                            "AND DATE(scheduled_departure AT TIME ZONE ad.timezone) = to_date('" + dateTimeStr + "', 'DD/MM/YY')";

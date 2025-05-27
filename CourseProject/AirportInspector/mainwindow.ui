@@ -37,6 +37,15 @@
         <property name="styleSheet">
          <string notr="true"/>
         </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+        </property>
+        <attribute name="horizontalHeaderCascadingSectionResizes">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderMinimumSectionSize">
+         <number>100</number>
+        </attribute>
        </widget>
       </item>
       <item>
